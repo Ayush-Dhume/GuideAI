@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 from google.cloud import translate_v2 as translate
 from livelocation import chatbot
+from trip_planning import generate_trip_plan
+
 
 app = Flask(__name__)
 
@@ -37,6 +39,23 @@ def translate_and_chat():
         translated_response = bot_response_in_english
 
     return translated_response
+
+
+@app.route("/plan")
+def plan():
+    return render_template('plantour.html')
+
+
+@app.route("/plantour", methods=["GET", "POST"])
+def plantour():
+    if request.method == "POST":
+        destination = request.form.get("destination")
+        origin = request.form.get("origin")
+        departure_date = request.form.get("departure_date")
+        suggestions = request.form.get("suggestions")
+        response = generate_trip_plan(
+            destination, origin, departure_date, suggestions)
+        return response
 
 
 if __name__ == '__main__':

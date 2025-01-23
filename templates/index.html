@@ -33,7 +33,7 @@
                             <span class="nav-text">Dashboard</span>
                         </div>
                     </div>
-                    <div class="nav-item">
+                    <div class="nav-item" onclick="plantour()">
                         <div class="nav-link-wrapper">
                             <div class="icon-wrapper">
                                 <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/dabeb357ebb28e7e05affbde39652eb2cacd2edde62b7181cb02693dd5b08e4c?placeholderIfAbsent=true&apiKey=8f9384ecae504e44abcf5b4b9c626c20"
@@ -118,6 +118,10 @@
         </div>
     </div>
     <script>
+        function plantour() {
+            window.location.href = "/plan";
+        }
+
         function getSelectedValue() {
             const dropdown = document.getElementById("myDropdown");
             const selectedValue = dropdown.value;

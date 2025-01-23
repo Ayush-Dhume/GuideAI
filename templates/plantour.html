@@ -1,0 +1,183 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GuideAI</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}" /> -->
+    <link rel="stylesheet" href="/static/pstyle.css">
+
+</head>
+
+<body>
+    <div class="raw">
+        <!-- Navbar code -->
+        <div class="sidebar">
+            <div class="brand-container">
+                <div class="brand-wrapper">
+                </div>
+                <nav class="nav-list" role="navigation">
+                    <div class="nav-item" onclick="home()">
+                        <div class="nav-link-wrapper">
+                            <div class="icon-wrapper">
+                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/c814fbb7fee08956cc967b92e9d7795a5cc88a3f29d3f575364951a246d7cf4f?placeholderIfAbsent=true&apiKey=8f9384ecae504e44abcf5b4b9c626c20"
+                                    alt="Dashboard Icon" loading="lazy" />
+                            </div>
+                            <span class="nav-text">Dashboard</span>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <div class="nav-link-wrapper">
+                            <div class="icon-wrapper">
+                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/dabeb357ebb28e7e05affbde39652eb2cacd2edde62b7181cb02693dd5b08e4c?placeholderIfAbsent=true&apiKey=8f9384ecae504e44abcf5b4b9c626c20"
+                                    alt="Media Icon" loading="lazy" />
+                            </div>
+                            <span class="nav-text">Plan a Tour!</span>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <div class="nav-link-wrapper">
+                            <div class="icon-wrapper">
+                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/300dcf926aab585dda4d526829b28b1f0cbd068d26f65ef219cefa3f0096cf10?placeholderIfAbsent=true&apiKey=8f9384ecae504e44abcf5b4b9c626c20"
+                                    alt="Settings Icon" loading="lazy" />
+                            </div>
+                            <span class="nav-text">Settings</span>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                    </div>
+                </nav>
+            </div>
+            <div class="footer-container">
+                <div class="nav-item">
+                    <div class="nav-link-wrapper" id="Logout">
+                        <div class="icon-wrapper">
+                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e90ad4332e7d36e67b0c320c2c2b2f9af62cff4cdf38c3084c074255dcc39bba?placeholderIfAbsent=true&apiKey=8f9384ecae504e44abcf5b4b9c626c20"
+                                alt="Logout Icon" loading="lazy" />
+                        </div>
+                        <span class="nav-text">Logout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- chat window code -->
+        <div class="container-fluid h-100">
+            <div class="row justify-content-center h-100">
+                <div class="col-md-8 col-xl-6 chat">
+                    <div class="card">
+                        <div class="card-header msg_head">
+                            <div class="d-flex bd-highlight">
+                                <div class="img_cont">
+                                    <img src="https://i.ibb.co/fSNP7Rz/icons8-chatgpt-512.png"
+                                        class="rounded-circle user_img" />
+                                    <span class="online_icon"></span>
+                                </div>
+                                <div class="user_info">
+                                    <span>GuideAI</span>
+                                    <p>Lets plan a tour for you!</p>
+                                </div>
+                            </div>
+                            <select id="myDropdown" onclick="getSelectedValue()">
+                                <option class="option" value="en-GB">English</option>
+                                <option class="option" value="hi-GB">Hindi</option>
+                                <option class="option" value="de-AT">German</option>
+                            </select>
+                        </div>
+                        <div class="card-footer">
+                            <form id="formplan" class="input-group" action="/plantour" method="post">
+                                <label for="text1">Destination:</label>
+                                <input type="text" id="text1" placeholder="Enter the place to Go" required
+                                    name="destination">
+
+                                <label for="text2">Origin:</label>
+                                <input type="text" id="text2" placeholder="Enter the place to start from" required
+                                    name="origin">
+
+                                <label for="date">Date:</label>
+                                <input type="date" id="date" required name="departure_date">
+
+                                <label for="text3">Suggestions:</label>
+                                <input type="text" id="text3" placeholder="Enter third text" required
+                                    name="suggestions">
+
+                                <button type="submit">Submit</button>
+                            </form>
+                            <button type="button" id="back" class="input-group-text" hidden
+                                onclick="backtoform()">Back</button>
+                        </div>
+                        <div id="answer" class="card-body msg_card_body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function home() {
+            window.location.href = "/";
+        }
+
+        function scrollToBottom() {
+            var messageBody = document.getElementById("answer");
+            messageBody.scrollTop = messageBody.scrollHeight;
+        }
+
+        const form = document.getElementById('formplan');
+        const backButton = document.getElementById('back');
+        const answerDiv = document.getElementById('answer');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            fetch('/plantour', {
+                method: 'POST',
+                body: formData,
+            })
+                .then((response) => response.text())
+                .then((data) => {
+                    const answerDiv = document.getElementById('answer');
+                    answerDiv.innerHTML = `
+                        <div class="d-flex justify-content-start mb-4">
+                            <div class="img_cont_msg">
+                            <img src="https://i.ibb.co/fSNP7Rz/icons8-chatgpt-512.png" class="rounded-circle user_img_msg">
+                            </div>
+                            <div class="msg_cotainer">
+                            ${data}
+                            <span class="msg_time">GuideAI, 1 second ago</span>
+                            </div>
+                        </div>
+                        `;
+
+                    const formElements = form.elements;
+                    for (let i = 0; i < formElements.length; i++) {
+                        formElements[i].disabled = true;
+                    }
+                    form.style.display = 'none';
+                    backButton.hidden = false;
+                })
+                .catch((error) => console.error(error));
+        });
+
+        function backtoform() {
+            form.style.display = 'block';
+            const formElements = form.elements;
+            for (let i = 0; i < formElements.length; i++) {
+                formElements[i].disabled = false;
+            }
+            answerDiv.innerHTML = '';
+            backButton.hidden = true;
+            form.reset();
+        }
+    </script>
+</body>
+
+</html>

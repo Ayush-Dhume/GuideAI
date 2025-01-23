@@ -1,4 +1,5 @@
 body,html{
+    overflow: hidden;
 	height: 100%;
 	margin: 0;
 	background: rgb(44, 47, 59);
@@ -17,7 +18,7 @@ body,html{
 	margin-bottom: auto;
 }
 .card{
-	height: 500px;
+	height: 550px;
 	border-radius: 15px !important;
 	background-color: rgba(0,0,0,0.4) !important;
 }
@@ -82,56 +83,7 @@ body,html{
 .container{
 	align-content: center;
 }
-.search{
-	border-radius: 15px 0 0 15px !important;
-	background-color: rgba(0,0,0,0.3) !important;
-	border:0 !important;
-	color:white !important;
-}
-.search:focus{
-	 box-shadow:none !important;
-   outline:0px !important;
-}
-.type_msg{
-	background-color: rgba(0,0,0,0.3) !important;
-	border:0 !important;
-	color:white !important;
-	height: 60px !important;
-	overflow-y: auto;
-}
-	.type_msg:focus{
-	 box-shadow:none !important;
-   outline:0px !important;
-}
-.attach_btn{
-	border-radius: 15px 0 0 15px !important;
-	background-color: rgba(0,0,0,0.3) !important;
-	border:0 !important;
-	color: white !important;
-	cursor: pointer;
-}
-.send_btn{
-	background-color: rgba(0,0,0,0.3) !important;
-	border:0 !important;
-	color: white !important;
-	cursor: pointer;
-}
-.voice_btn{
-	border-radius: 0 15px 15px 0 !important;
-	background-color: rgba(0,0,0,0.3) !important;
-	border:0 !important;
-	color: white !important;
-	cursor: pointer;
-}
-.contacts{
-	list-style: none;
-	padding: 0;
-}
-.contacts li{
-	width: 100% !important;
-	padding: 5px 10px;
-	margin-bottom: 15px !important;
-}
+
 .active{
 	background-color: rgba(0,0,0,0.3);
 }
@@ -182,16 +134,38 @@ body,html{
 	font-size: 10px;
 	color: rgba(255,255,255,0.6);
 }
-.video_cam{
-	margin-left: 50px;
-	margin-top: 5px;
+form {
+    max-width: 400px;
+    margin: 0 auto;
 }
-.video_cam span{
-	color: white;
-	font-size: 20px;
-	cursor: pointer;
-	margin-right: 20px;
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
 }
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
 .msg_cotainer{
 	margin-top: auto;
 	margin-bottom: auto;
@@ -227,42 +201,7 @@ body,html{
 .msg_head{
 	position: relative;
 }
-#action_menu_btn{
-	position: absolute;
-	right: 10px;
-	top: 10px;
-	color: white;
-	cursor: pointer;
-	font-size: 20px;
-}
-.action_menu{
-	z-index: 1;
-	position: absolute;
-	padding: 15px 0;
-	background-color: rgba(0,0,0,0.5);
-	color: white;
-	border-radius: 15px;
-	top: 30px;
-	right: 15px;
-	display: none;
-}
-.action_menu ul{
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-.action_menu ul li{
-	width: 100%;
-	padding: 10px 15px;
-	margin-bottom: 5px;
-}
-.action_menu ul li i{
-	padding-right: 10px;
-}
-.action_menu ul li:hover{
-	cursor: pointer;
-	background-color: rgba(0,0,0,0.2);
-}
+
 @media(max-width: 576px){
 	.contacts_card{
 	margin-bottom: 15px !important;
