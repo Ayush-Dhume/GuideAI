@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect
 from google.cloud import translate_v2 as translate
 from livelocation import chatbot
 from trip_planning import generate_trip_plan
 from image import get_all_img
+import os
+import requests
+from dotenv import load_dotenv
 
 
 app = Flask(__name__)
@@ -10,8 +13,72 @@ app = Flask(__name__)
 translate_client = translate.Client()
 
 
-@app.route("/")
-def index():
+load_dotenv()
+
+# IBM App ID credentials from environment variables
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+OAUTH_SERVER_URL = os.getenv("OAUTH_SERVER_URL")
+REDIRECT_URI = os.getenv("REDIRECT_URI")
+
+
+@app.route('/')
+def login():
+    """Redirect users to the IBM App ID login page."""
+    auth_url = f"{OAUTH_SERVER_URL}/authorization" \
+        f"?client_id={CLIENT_ID}" \
+        f"&response_type=code" \
+        f"&redirect_uri={REDIRECT_URI}" \
+        f"&scope=openid email profile"
+
+    return redirect(auth_url)
+
+
+@app.route('/callback')
+def callback():
+    """Handle the callback and exchange the code for an access token."""
+    code = request.args.get('code')
+    if not code:
+        return "Error: Authorization code not provided.", 400
+
+    # Exchange authorization code for access token
+    token_url = f"{OAUTH_SERVER_URL}/token"
+    payload = {
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
+        "grant_type": "authorization_code",
+        "redirect_uri": REDIRECT_URI,
+        "code": code
+    }
+
+    try:
+        response = requests.post(token_url, data=payload)
+        response.raise_for_status()
+        token_data = response.json()
+        access_token = token_data.get('access_token')
+
+        if access_token:
+            user_info = get_user_info(access_token)
+            return render_template('index.html')
+
+        return "Error: Failed to retrieve access token.", 400
+
+    except requests.exceptions.RequestException as e:
+        return f"Error during token exchange: {e}", 500
+
+
+def get_user_info(access_token):
+    """Fetch user profile using the access token."""
+    userinfo_url = f"{OAUTH_SERVER_URL}/userinfo"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    response = requests.get(userinfo_url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    return {"error": "Failed to fetch user info"}
+
+
+@app.route("/home")
+def home():
     return render_template('index.html')
 
 
