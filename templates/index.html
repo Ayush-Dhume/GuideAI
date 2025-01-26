@@ -42,13 +42,13 @@
                             <span class="nav-text">Plan a Tour!</span>
                         </div>
                     </div>
-                    <div class="nav-item">
+                    <div class="nav-item" onclick="image()">
                         <div class="nav-link-wrapper">
                             <div class="icon-wrapper">
                                 <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/300dcf926aab585dda4d526829b28b1f0cbd068d26f65ef219cefa3f0096cf10?placeholderIfAbsent=true&apiKey=8f9384ecae504e44abcf5b4b9c626c20"
                                     alt="Settings Icon" loading="lazy" />
                             </div>
-                            <span class="nav-text">Settings</span>
+                            <span class="nav-text">Search Image</span>
                         </div>
                     </div>
                     <div class="nav-item">
@@ -118,6 +118,9 @@
         </div>
     </div>
     <script>
+        function image() {
+            window.location.href = "/image";
+        }
         function plantour() {
             window.location.href = "/plan";
         }

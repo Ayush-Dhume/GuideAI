@@ -3,18 +3,21 @@ import os
 from google.cloud import vision
 from googlemaps import Client as GoogleMapsClient
 import wikipedia
+import base64
+
 
 MAPS_API_KEY = "AIzaSyBOoDCqCkmhXLzqGkXNzXir0oA1ullGG0w"
 
 
-def analyze_image(image_path):
+def analyze_image(image_bytes):
     try:
+        encoded_image = base64.b64encode(image_bytes).decode("utf-8")
+        if not encoded_image:
+            print("Error: Image not properly encoded")
+            return None
+
         client = vision.ImageAnnotatorClient()
-
-        with io.open(image_path, 'rb') as image_file:
-            content = image_file.read()
-
-        image = vision.Image(content=content)
+        image = vision.Image(content=encoded_image)
 
         response = client.label_detection(image=image)
         labels = response.label_annotations
@@ -79,53 +82,21 @@ def find_places_nearby(latitude, longitude, query=None):
         return None
 
 
+def get_all_img(image_bytes):
+    print("Starting image analysis...")
+
+    analysis_results = analyze_image(image_bytes)
+    if not analysis_results:
+        print("Image analysis failed or returned no results.")
+        return None
+
+    print(f"Analysis Results: {analysis_results}")
+    place_info = get_place_info(
+        analysis_results['landmarks'][0] if analysis_results['landmarks'] else None)
+    print(f"Place Info: {place_info}")
+    return {"Place Name": analysis_results['landmarks'][0], "Place Info": place_info}
+
+
 if __name__ == "__main__":
     image_path = "a.jpeg"
-
-    analysis_results = analyze_image(image_path)
-    place_info = get_place_info(analysis_results['landmarks'])
-
-    if analysis_results:
-        print("Image Analysis Results:")
-        print(f"Labels: {analysis_results['labels']}")
-        print(f"Landmarks: {analysis_results['landmarks']}")
-        print(place_info)
-
-        if analysis_results['landmarks']:
-            landmark_name = analysis_results['landmarks'][0]
-            coordinates = geocode_landmark(landmark_name)
-
-            if coordinates:
-                print(f"Geocoded coordinates for {
-                      landmark_name}: {coordinates}")
-                places = find_places_nearby(coordinates[0], coordinates[1])
-
-                if places:
-                    print("\nNearby Places:")
-                    for place in places:
-                        print(f"- {place['name']} ({place['geometry']['location']
-                              ['lat']}, {place['geometry']['location']['lng']})")
-                else:
-                    print("Could not find any places nearby the geocoded coordinates.")
-
-        elif analysis_results['full_text']:
-            full_text_query = analysis_results['full_text']
-            landmark_coordinates = geocode_landmark(full_text_query)
-            if landmark_coordinates:
-                places = find_places_nearby(
-                    landmark_coordinates[0], landmark_coordinates[1])
-                if places:
-                    print("\nNearby Places (from text):")
-                    for place in places:
-                        print(f"- {place['name']} ({place['geometry']['location']
-                              ['lat']}, {place['geometry']['location']['lng']})")
-                else:
-                    print(
-                        "Could not find any places nearby the geocoded coordinates (from text).")
-            else:
-                print("Could not geocode the text.")
-
-        else:
-            print("No landmarks or text found in the image.")
-    else:
-        print("Image analysis failed.")
+    get_all_img(image_path)

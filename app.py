@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from google.cloud import translate_v2 as translate
 from livelocation import chatbot
 from trip_planning import generate_trip_plan
+from image import get_all_img
 
 
 app = Flask(__name__)
@@ -56,6 +57,28 @@ def plantour():
         response = generate_trip_plan(
             destination, origin, departure_date, suggestions)
         return response
+
+
+@app.route("/image")
+def image():
+    return render_template('image.html')
+
+
+@app.route("/imageupload", methods=["POST"])
+def imageupload():
+    uploaded_file = request.files.get("image")
+    if not uploaded_file:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    image_bytes = uploaded_file.read()
+    if not image_bytes:
+        return jsonify({"error": "File is empty"}), 400
+
+    get_info = get_all_img(image_bytes)
+    if get_info is None:
+        return jsonify({"error": "Image processing failed"}), 500
+
+    return jsonify({"info": get_info})
 
 
 if __name__ == '__main__':

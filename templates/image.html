@@ -92,28 +92,15 @@
                             </select>
                         </div>
                         <div class="card-footer">
-                            <form id="formplan" class="input-group" action="/plantour" method="post">
-                                <label for="text1">Destination:</label>
-                                <input type="text" id="text1" placeholder="Enter the place to Go" required
-                                    name="destination">
-
-                                <label for="text2">Origin:</label>
-                                <input type="text" id="text2" placeholder="Enter the place to start from" required
-                                    name="origin">
-
-                                <label for="date">Date:</label>
-                                <input type="date" id="date" required name="departure_date">
-
-                                <label for="text3">Suggestions:</label>
-                                <input type="text" id="text3" placeholder="Enter third text" required
-                                    name="suggestions">
-
-                                <button type="submit">Submit</button>
+                            <form id="imageUploadForm" enctype="multipart/form-data">
+                                <label for="image">Select an Image:</label>
+                                <input type="file" id="image" name="image" accept="image/*" required><br><br>
+                                <button type="submit">Upload</button>
                             </form>
                             <button type="button" id="back" class="input-group-text" hidden
                                 onclick="backtoform()">Back</button>
                         </div>
-                        <div id="answer" class="card-body msg_card_body">
+                        <div id="answer_img" class="card-body msg_card_body">
                         </div>
                     </div>
                 </div>
@@ -121,65 +108,48 @@
         </div>
     </div>
     <script>
-        function image() {
-            window.location.href = "/image";
-        }
 
         function home() {
             window.location.href = "/";
         }
 
+        function plantour() {
+            window.location.href = "/plan";
+        }
+
         function scrollToBottom() {
-            var messageBody = document.getElementById("answer");
+            var messageBody = document.getElementById("answer_img");
             messageBody.scrollTop = messageBody.scrollHeight;
         }
 
-        const form = document.getElementById('formplan');
-        const backButton = document.getElementById('back');
-        const answerDiv = document.getElementById('answer');
-
-        form.addEventListener('submit', (event) => {
+        document.getElementById("imageUploadForm").addEventListener("submit", async function (event) {
             event.preventDefault();
-            const formData = new FormData(form);
-            fetch('/plantour', {
-                method: 'POST',
-                body: formData,
-            })
-                .then((response) => response.text())
-                .then((data) => {
-                    const answerDiv = document.getElementById('answer');
-                    answerDiv.innerHTML = `
-                        <div class="d-flex justify-content-start mb-4">
-                            <div class="img_cont_msg">
-                            <img src="https://i.ibb.co/fSNP7Rz/icons8-chatgpt-512.png" class="rounded-circle user_img_msg">
-                            </div>
-                            <div class="msg_cotainer">
-                            ${data}
-                            <span class="msg_time">GuideAI, 1 second ago</span>
-                            </div>
-                        </div>
-                        `;
+            const formData = new FormData(this);
 
-                    const formElements = form.elements;
-                    for (let i = 0; i < formElements.length; i++) {
-                        formElements[i].disabled = true;
-                    }
-                    form.style.display = 'none';
-                    backButton.hidden = false;
-                })
-                .catch((error) => console.error(error));
+            try {
+                const response = await fetch("/imageupload", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to upload image: " + response.statusText);
+                }
+
+                const data = await response.json();
+                console.log(data);
+
+                if (data.error) {
+                    document.getElementById("answer_img").textContent = `Error: ${data.error}`;
+                } else {
+                    document.getElementById("answer_img").textContent = `Info: ${JSON.stringify(data.info)}`;
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById("answer_img").textContent = `Error: ${error.message}`;
+            }
         });
 
-        function backtoform() {
-            form.style.display = 'block';
-            const formElements = form.elements;
-            for (let i = 0; i < formElements.length; i++) {
-                formElements[i].disabled = false;
-            }
-            answerDiv.innerHTML = '';
-            backButton.hidden = true;
-            form.reset();
-        }
     </script>
 </body>
 

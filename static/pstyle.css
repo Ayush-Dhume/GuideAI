@@ -208,7 +208,9 @@ button:hover {
 }
 }
 
-
+#answer_img{
+  color: #fff;
+}
 /* Side navigation bar */
 
 .sidebar {
