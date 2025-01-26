@@ -136,19 +136,19 @@
                     throw new Error("Failed to upload image: " + response.statusText);
                 }
 
-                const data = await response.json();
+                const data = await response.text();
                 console.log(data);
 
-                if (data.error) {
-                    document.getElementById("answer_img").textContent = `Error: ${data.error}`;
-                } else {
-                    document.getElementById("answer_img").textContent = `Info: ${JSON.stringify(data.info)}`;
-                }
+                const formattedResponse = data.replace(/\n/g, "<br>");
+
+                document.getElementById("answer_img").innerHTML = `${formattedResponse}`;
             } catch (error) {
                 console.error(error);
                 document.getElementById("answer_img").textContent = `Error: ${error.message}`;
             }
         });
+
+
 
     </script>
 </body>

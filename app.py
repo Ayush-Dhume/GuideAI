@@ -78,7 +78,7 @@ def imageupload():
     if get_info is None:
         return jsonify({"error": "Image processing failed"}), 500
 
-    return jsonify({"info": get_info})
+    return str(get_info)
 
 
 if __name__ == '__main__':

@@ -37,7 +37,7 @@ def analyze_image(image_bytes):
 
 def get_place_info(landmark):
     if landmark:
-        wikipedia_info = wikipedia.summary(landmark, sentences=4)
+        wikipedia_info = wikipedia.summary(landmark, sentences=2)
         return wikipedia_info
     else:
         return "Sorry, I couldn't find any information about this place."
