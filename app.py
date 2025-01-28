@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect
+from flask import Flask, render_template, request, jsonify, redirect, session
 from google.cloud import translate_v2 as translate
 from livelocation import chatbot
 from trip_planning import generate_trip_plan
@@ -20,6 +20,13 @@ CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 OAUTH_SERVER_URL = os.getenv("OAUTH_SERVER_URL")
 REDIRECT_URI = os.getenv("REDIRECT_URI")
+app.secret_key = os.getenv("SECRET_KEY")
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
 
 
 @app.route('/')
@@ -56,10 +63,14 @@ def callback():
         response.raise_for_status()
         token_data = response.json()
         access_token = token_data.get('access_token')
+        id_token = token_data.get('id_token')
 
         if access_token:
+            # this function not required but can be used in future
             user_info = get_user_info(access_token)
-            return render_template('index.html')
+            session['access_token'] = access_token  # Store token in session
+            session['id_token'] = id_token  # Store ID token
+            return redirect('/home')
 
         return "Error: Failed to retrieve access token.", 400
 
@@ -79,6 +90,9 @@ def get_user_info(access_token):
 
 @app.route("/home")
 def home():
+    if 'access_token' not in session:
+        return redirect('/')
+
     return render_template('index.html')
 
 
@@ -98,11 +112,12 @@ def translate_and_chat():
     else:
         translated_input = user_msg
 
-    bot_response_in_english = chatbot(translated_input)
+    bot_response_in_english = chatbot(translated_input.lower())
 
     if detected_lang != "en":
         translated_response = translate_client.translate(
             bot_response_in_english, target_language=detected_lang)['translatedText']
+        print(translated_response)
     else:
         translated_response = bot_response_in_english
 

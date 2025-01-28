@@ -57,7 +57,7 @@
                 </nav>
             </div>
             <div class="footer-container">
-                <div class="nav-item">
+                <div class="nav-item" onclick="logout()">
                     <div class="nav-link-wrapper" id="Logout">
                         <div class="icon-wrapper">
                             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e90ad4332e7d36e67b0c320c2c2b2f9af62cff4cdf38c3084c074255dcc39bba?placeholderIfAbsent=true&apiKey=8f9384ecae504e44abcf5b4b9c626c20"
@@ -110,6 +110,9 @@
         </div>
     </div>
     <script>
+        function logout() {
+            window.location.href = "/logout";
+        }
 
         function home() {
             window.location.href = "/home";
