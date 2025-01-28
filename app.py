@@ -123,7 +123,12 @@ def plantour():
         suggestions = request.form.get("suggestions")
         response = generate_trip_plan(
             destination, origin, departure_date, suggestions)
-        return response
+
+        language = request.form.get('language')
+        translated_response = translate_client.translate(
+            response, target_language=language)['translatedText']
+
+        return translated_response
 
 
 @app.route("/image")

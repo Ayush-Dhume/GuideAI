@@ -85,12 +85,12 @@
                                     <p>Lets plan a tour for you!</p>
                                 </div>
                             </div>
-                            <select id="myDropdown" onclick="getSelectedValue()">
-                                <option class="option" value="en-GB">English</option>
-                                <option class="option" value="hi-GB">Hindi</option>
-                                <option class="option" value="de-AT">German</option>
-                                <option class="option" value="mr-IN">Marathi</option>
-                                <option class="option" value="kn-IN">Kannada</option>
+                            <select id="myDropdown" name="drp">
+                                <option class="option" value="en">English</option>
+                                <option class="option" value="hi">Hindi</option>
+                                <option class="option" value="de">German</option>
+                                <option class="option" value="mr">Marathi</option>
+                                <option class="option" value="kn">Kannada</option>
                             </select>
                         </div>
                         <div class="card-footer">
@@ -139,10 +139,13 @@
         const form = document.getElementById('formplan');
         const backButton = document.getElementById('back');
         const answerDiv = document.getElementById('answer');
+        const dropdown = document.getElementById('myDropdown');
 
         form.addEventListener('submit', (event) => {
             event.preventDefault();
             const formData = new FormData(form);
+            const selectedLanguage = dropdown.value;
+            formData.append('language', selectedLanguage);
             fetch('/plantour', {
                 method: 'POST',
                 body: formData,
